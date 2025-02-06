@@ -1,4 +1,4 @@
-// File: C:\Users\raoam\Downloads\realtime-code-editor-main\realtime-code-editor-main\src\app\room\[roomId]\page.jsx
+// File: C:\Users\raoam\Downloads\BrdrCodes\brocode\src\app\room\[roomId]\page.jsx
 import * as entry from '../../../../../src/app/room/[roomId]/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
