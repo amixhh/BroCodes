@@ -13,6 +13,7 @@ const EVENTS = require('@/socket-events/events.js');
 const RoomPage = () => {
   const searchParams = useSearchParams();
   const currentUsername = searchParams.get('username');
+  const selectedLanguage = searchParams.get('language') || 'cpp';
   const { roomId } = useParams();
 
   const socketRef = useRef(null);
@@ -39,19 +40,16 @@ const RoomPage = () => {
         roomId,
         theme: getRandomColor(),
         username: currentUsername,
+        language: selectedLanguage
       });
 
       socketRef.current.on(
-        EVENTS.JOINED, ({
-          editors,
-          socketId,
-          user,
-        }) => {
-          if (user.username !== currentUsername) {
-            toast.success(`${user.username} joined the room`);
+        EVENTS.JOINED, ({ editors, socketId, name }) => {
+          if (name && name !== currentUsername) {
+            toast.success(`${name} joined the room`);
           }
-          if (user.username === currentUsername) {
-            setUser(user);
+          if (name && name === currentUsername) {
+            setUser({ username: name });
           }
           setEditors(editors);
           socketRef.current.emit(EVENTS.SYNC_CODE, {
@@ -62,21 +60,10 @@ const RoomPage = () => {
       );
 
       socketRef.current.on(
-        EVENTS.DISCONNECTED, ({
-          socketId,
-          user,
-        }) => {
+        EVENTS.DISCONNECTED, ({ socketId, user }) => {
           toast.success(`${user.username} left the room`);
-          setEditors((prev) => {
-            return prev.filter(
-              (editor) => editor.socketId !== socketId
-            );
-          });
-
-          setCursors((prevCursors) => {
-            const updatedCursors = prevCursors.filter((cur) => cur.socketId !== socketId);
-            return updatedCursors;
-          });
+          setEditors((prev) => prev.filter((editor) => editor.socketId !== socketId));
+          setCursors((prevCursors) => prevCursors.filter((cur) => cur.socketId !== socketId));
         }
       );
     };
@@ -87,7 +74,7 @@ const RoomPage = () => {
       socketRef.current?.off(EVENTS.JOINED);
       socketRef.current?.off(EVENTS.DISCONNECTED);
     };
-  }, []);
+  }, [currentUsername, roomId, router, selectedLanguage]);
 
   async function copyRoomId() {
     try {
@@ -108,49 +95,44 @@ const RoomPage = () => {
   }
 
   return (
-    <div className="flex flex-col md:flex-row bg-dark">
-      <div      
+    <div className="flex bg-dark">
+      {/* Left Sidebar */}
+      <div 
         ref={editorBlockRef}
-        className="flex flex-col gap-4 min-w-full md:min-w-74 pb-8"
+        className="hidden md:flex md:flex-col md:fixed md:top-0 md:left-0 md:h-screen md:w-64 gap-4 p-5"
       >
-        <div className="p-5 bg-dark text-white">
-          <h1 className="text-center font-bold text-2xl">BroCode!<br /> Playground</h1>
+        <div className="bg-dark text-white">
+          <h1 className="text-center font-bold text-2xl">BroCode!<br />Playground</h1>
         </div>
         <div className="grow">
-          <div className="flex flex-wrap md:grid md:grid-cols-2 gap-3 p-3">
+          <div className="flex flex-wrap gap-3 p-3">
             {editors.map((editor) => (
-              <UserAvatar
-                key={editor.socketId}
-                user={editor.user}
-              />
+              <UserAvatar key={editor.socketId} user={editor.user} />
             ))}
           </div>
         </div>
-        <div className="flex flex-row md:flex-col justify-center items-center gap-5">
-          <Button onClick={copyRoomId}>
-            Copy Room ID
-          </Button>
-          <Button variant="secondary" onClick={leaveRoom}>
-            Leave Room
-          </Button>
+        <div className="flex flex-col justify-center items-center gap-5">
+          <Button onClick={copyRoomId}>Copy Room ID</Button>
+          <Button variant="secondary" onClick={leaveRoom}>Leave Room</Button>
         </div>
       </div>
-      <div className="w-full md:grow">
+      
+      {/* Right Editor Container */}
+      <div className="w-full md:ml-64">
         <Editor
           currentUsername={currentUsername}
           editorBlockRef={editorBlockRef}
-          onCodeChange={(code) => {
-            codeRef.current = code;
-          }}
+          onCodeChange={(code) => { codeRef.current = code; }}
           roomId={roomId}
           socketRef={socketRef}
           user={user}
           cursors={cursors}
           setCursors={setCursors}
+          language={selectedLanguage}
         />
       </div>
     </div>
   );
 }
 
-export default RoomPage; 
+export default RoomPage;

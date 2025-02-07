@@ -2,6 +2,7 @@
 
 import Button from "@/components/button";
 import Input from "@/components/input";
+import LanguageSelector from "@/components/code-editor/LanguageSelector";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
@@ -12,6 +13,29 @@ const HomePage = () => {
 
   const [roomId, setRoomId] = useState('');
   const [username, setUsername] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState({ 
+    id: 'cpp', 
+    name: 'C++',
+    boilerplate: `#include <bits/stdc++.h>
+using namespace std;
+#define int long long
+#define endl "\\n"
+
+signed main(){
+    
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+
+    int t;
+    cin >> t;
+    while(t--){
+        
+    }
+    return 0;
+}`
+  });
+
   const createNewRoom = (e) => {
     e.preventDefault();
     const id = uuidV4();
@@ -23,8 +47,7 @@ const HomePage = () => {
       toast.error('Please enter username and room ID');
       return;
     }
-
-    router.push(`/room/${roomId}?username=${username}`);
+    router.push(`/room/${roomId}?username=${username}&language=${selectedLanguage.id}`);
   };
 
   const handleInputEnter = (e) => {
@@ -50,6 +73,10 @@ const HomePage = () => {
           value={roomId}
           onChange={(e) => setRoomId(e.target.value)}
           onKeyDown={handleInputEnter}
+        />
+        <LanguageSelector
+          selectedLanguage={selectedLanguage.id}
+          onLanguageChange={(lang) => setSelectedLanguage(lang)}
         />
         <div className="flex gap-4">
           <Button onClick={createNewRoom}>Create New Room Id</Button>
