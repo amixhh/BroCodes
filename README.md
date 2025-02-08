@@ -27,7 +27,7 @@ https://github.com/user-attachments/assets/0cf56ecb-a8a2-4f21-a158-062432776b46
 
 ### 1️⃣ Clone the Repository
 ```sh
-git clone https://github.com/your-username/BroCode.git
+git clone https://github.com//BroCode.git
 cd brocode
 ```
 ### 2️⃣ Set Up Environment Variables
@@ -39,7 +39,7 @@ NEXT_PUBLIC_WEBSOCKET_URL=ws://localhost:1234
 ```
 ### 3️⃣ Start the WebSocket Server
 ```sh
-node server/y-websocket.js
+node server/y-websocket-server.js
 ```
 ### 4️⃣ Start the Backend Server
 ```sh
