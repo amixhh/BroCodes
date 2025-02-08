@@ -27,15 +27,14 @@ https://github.com/user-attachments/assets/0cf56ecb-a8a2-4f21-a158-062432776b46
 
 ### 1️⃣ Clone the Repository
 ```sh
-git clone https://github.com//BroCode.git
-cd brocode
+git clone https://github.com/amixhh/BroCodes.git
 ```
 ### 2️⃣ Set Up Environment Variables
 Create a `.env` file in the root directory and add the following variables:
 ```sh
-NEXT_PUBLIC_JDOODLE_CLIENT_ID=your_client_id
-NEXT_PUBLIC_JDOODLE_CLIENT_SECRET=your_client_secret
-NEXT_PUBLIC_WEBSOCKET_URL=ws://localhost:1234
+NEXT_PUBLIC_BACKEND_URL="http://localhost:8080"
+NEXT_PUBLIC_JDOODLE_CLIENT_ID="your_client_ID"
+NEXT_PUBLIC_JDOODLE_CLIENT_SECRET="your_client_secret"
 ```
 ### 3️⃣ Start the WebSocket Server
 ```sh
